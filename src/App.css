@@ -1,3 +1,74 @@
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Light theme scrollbar */
+body[data-theme='light'] ::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.3);
+}
+
+body[data-theme='light'] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.5);
+}
+
+/* Editor specific scrollbar */
+.editor-body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.editor-body::-webkit-scrollbar-track {
+  background: var(--code-bg);
+  border-radius: 0 0 0.75rem 0;
+}
+
+.editor-body::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 5px;
+  border: 2px solid var(--code-bg);
+}
+
+.editor-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.6);
+}
+
+body[data-theme='light'] .editor-body::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.35);
+}
+
+body[data-theme='light'] .editor-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.5);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+}
+
+body[data-theme='light'] * {
+  scrollbar-color: rgba(100, 116, 139, 0.3) transparent;
+}
+
  .app {
   min-height: 100vh;
   display: flex;
@@ -837,18 +908,21 @@ body[data-theme='light'] .modal-code--js {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   max-height: min(60vh, 540px);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .editor-gutter {
+  position: sticky;
+  left: 0;
   padding: 0.4rem 0.4rem 0.4rem 0.6rem;
   background: var(--gutter-bg);
   border-right: 1px solid var(--border-strong);
   font-family: var(--font-monospace);
   font-size: 0.78rem;
+  line-height: 1.45;
   color: var(--gutter-text);
   user-select: none;
-  overflow: auto;
 }
 
 .editor-content {
@@ -858,14 +932,16 @@ body[data-theme='light'] .modal-code--js {
   font-size: 0.78rem;
   line-height: 1.45;
   color: var(--editor-text);
-  overflow: auto;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-x: auto;
 }
 
 .editor-line-number {
   padding: 0 0.35rem;
   text-align: right;
+  line-height: 1.45;
+  min-height: 1.45em;
 }
 
 .editor-line-number--empty {
@@ -879,7 +955,9 @@ body[data-theme='light'] .modal-code--js {
 }
 
 .editor-line {
-  min-height: 1.35em;
+  min-height: 1.45em;
+  line-height: 1.45;
+  white-space: pre;
 }
 
 .editor-line--active {
@@ -910,8 +988,8 @@ body[data-theme='light'] .modal-code--js {
 
 .diff-gutter-line {
   display: flex;
-  height: 1.35em;
-  line-height: 1.35em;
+  height: 1.45em;
+  line-height: 1.45;
 }
 
 .diff-gutter-line--unchanged {
@@ -938,8 +1016,8 @@ body[data-theme='light'] .modal-code--js {
   font-family: var(--font-monospace);
   font-size: 0.75rem;
   color: var(--gutter-text);
-  height: 1.35em;
-  line-height: 1.35em;
+  height: 1.45em;
+  line-height: 1.45;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -971,10 +1049,11 @@ body[data-theme='light'] .diff-gutter-line--added {
 
 .diff-line {
   display: flex;
-  height: 1.35em;
-  line-height: 1.35em;
+  height: 1.45em;
+  line-height: 1.45;
   padding: 0 0.75rem;
   overflow: hidden;
+  white-space: pre;
 }
 
 .diff-line--unchanged {
