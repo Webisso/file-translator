@@ -25,17 +25,6 @@ const VIEW_MODES = {
   DIFF: 'diff',
 };
 
-const BASE_LANGUAGES = [
-  { code: 'en-US', label: 'English (en-US)' },
-  { code: 'tr', label: 'Turkish (tr)' },
-  { code: 'de-DE', label: 'German (de-DE)' },
-  { code: 'fr-FR', label: 'French (fr-FR)' },
-  { code: 'es-ES', label: 'Spanish (es-ES)' },
-  { code: 'ru', label: 'Russian (ru)' },
-  { code: 'zh-Hans', label: 'Chinese Simplified (zh-Hans)' },
-  // Add more as needed
-];
-
 const TARGET_LANGUAGES = [
   { code: 'ar-SA', label: 'Arabic (ar-SA)' },
   { code: 'ca', label: 'Catalan (ca)' },
@@ -106,9 +95,17 @@ function AppInner() {
   const [lines, setLines] = useState([]);
   const [baseLanguage, setBaseLanguage] = useState(DEFAULT_BASE_LANGUAGE);
   const [targetLanguage, setTargetLanguage] = useState(DEFAULT_TARGET_LANGUAGE);
-    const handleBaseLanguageChange = (event) => {
-      setBaseLanguage(event.target.value);
-    };
+  const handleBaseLanguageChange = (event) => {
+    const newBase = event.target.value;
+    setBaseLanguage(newBase);
+    // If target language is same as new base, pick the first available different language
+    if (targetLanguage === newBase) {
+      const firstDifferent = TARGET_LANGUAGES.find((lang) => lang.code !== newBase);
+      if (firstDifferent) {
+        setTargetLanguage(firstDifferent.code);
+      }
+    }
+  };
   const [isTranslating, setIsTranslating] = useState(false);
   const [translatedLines, setTranslatedLines] = useState([]);
   const [currentTranslatingLine, setCurrentTranslatingLine] = useState(-1);
@@ -436,13 +433,14 @@ function AppInner() {
                     </p>
                   </div>
 
-                  <div className="upload-area">
+                  <div className={`upload-area${isTranslating ? ' upload-area--disabled' : ''}`}>
                     <label className="upload-dropzone">
                       <input
                         ref={fileInputRef}
                         type="file"
                         className="upload-input"
                         onChange={handleFileChange}
+                        disabled={isTranslating}
                       />
                       <div className="upload-visual">
                         <div className="upload-icon">⬆</div>
@@ -487,7 +485,7 @@ function AppInner() {
                           value={baseLanguage}
                           onChange={handleBaseLanguageChange}
                         >
-                          {BASE_LANGUAGES.map((lang) => (
+                          {TARGET_LANGUAGES.map((lang) => (
                             <option key={lang.code} value={lang.code}>
                               {lang.label}
                             </option>
@@ -505,7 +503,9 @@ function AppInner() {
                           value={targetLanguage}
                           onChange={handleTargetLanguageChange}
                         >
-                          {TARGET_LANGUAGES.map((lang) => (
+                          {TARGET_LANGUAGES
+                            .filter((lang) => lang.code !== baseLanguage)
+                            .map((lang) => (
                             <option key={lang.code} value={lang.code}>
                               {lang.label}
                             </option>
@@ -563,24 +563,6 @@ function AppInner() {
                           >
                             Reset workspace
                           </button>
-                          {isTranslationComplete && translatedLines.length > 0 && (
-                            <>
-                              <button
-                                type="button"
-                                className="button button--secondary"
-                                onClick={handleCopy}
-                              >
-                                Copy
-                              </button>
-                              <button
-                                type="button"
-                                className="button button--secondary"
-                                onClick={handleDownload}
-                              >
-                                Download
-                              </button>
-                            </>
-                          )}
                         </>
                       )}
                     </div>
@@ -603,29 +585,49 @@ function AppInner() {
                       
                       <div className="editor-header-right">
                         {isTranslationComplete && translatedLines.length > 0 && (
-                          <div className="view-mode-toggle">
-                            <button
-                              type="button"
-                              className={`view-mode-btn${viewMode === VIEW_MODES.ORIGINAL ? ' view-mode-btn--active' : ''}`}
-                              onClick={() => setViewMode(VIEW_MODES.ORIGINAL)}
-                            >
-                              Original
-                            </button>
-                            <button
-                              type="button"
-                              className={`view-mode-btn${viewMode === VIEW_MODES.TRANSLATED ? ' view-mode-btn--active' : ''}`}
-                              onClick={() => setViewMode(VIEW_MODES.TRANSLATED)}
-                            >
-                              Translated
-                            </button>
-                            <button
-                              type="button"
-                              className={`view-mode-btn${viewMode === VIEW_MODES.DIFF ? ' view-mode-btn--active' : ''}`}
-                              onClick={() => setViewMode(VIEW_MODES.DIFF)}
-                            >
-                              Diff
-                            </button>
-                          </div>
+                          <>
+                            <div className="view-mode-toggle">
+                              <button
+                                type="button"
+                                className={`view-mode-btn${viewMode === VIEW_MODES.ORIGINAL ? ' view-mode-btn--active' : ''}`}
+                                onClick={() => setViewMode(VIEW_MODES.ORIGINAL)}
+                              >
+                                Original
+                              </button>
+                              <button
+                                type="button"
+                                className={`view-mode-btn${viewMode === VIEW_MODES.TRANSLATED ? ' view-mode-btn--active' : ''}`}
+                                onClick={() => setViewMode(VIEW_MODES.TRANSLATED)}
+                              >
+                                Translated
+                              </button>
+                              <button
+                                type="button"
+                                className={`view-mode-btn${viewMode === VIEW_MODES.DIFF ? ' view-mode-btn--active' : ''}`}
+                                onClick={() => setViewMode(VIEW_MODES.DIFF)}
+                              >
+                                Diff
+                              </button>
+                            </div>
+                            <div className="editor-actions">
+                              <button
+                                type="button"
+                                className="button button--small button--copy"
+                                onClick={handleCopy}
+                              >
+                                <span className="button-icon">📋</span>
+                                Copy
+                              </button>
+                              <button
+                                type="button"
+                                className="button button--small button--download"
+                                onClick={handleDownload}
+                              >
+                                <span className="button-icon">⬇</span>
+                                Download
+                              </button>
+                            </div>
+                          </>
                         )}
                         <span className="editor-badge">
                           {lines.length ? `${lines.length} lines` : 'Waiting for file'}

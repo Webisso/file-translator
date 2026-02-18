@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" id="favicon" href="%PUBLIC_URL%/dark-bg.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#0f172a" />
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="Open-source file translation UI powered by AI with n8n integration. Translate files line-by-line or as a whole with real-time progress."
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/dark-bg.svg" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -24,7 +24,46 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>Open-source file translation - WebissoLLC</title>
+    <script>
+      // Dynamic favicon based on color scheme
+      (function() {
+        function updateFavicon() {
+          const favicon = document.getElementById('favicon');
+          const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const storedTheme = localStorage.getItem('file-translator-theme');
+          
+          let useDark = isDark;
+          if (storedTheme === 'light') useDark = false;
+          if (storedTheme === 'dark') useDark = true;
+          
+          favicon.href = useDark ? '%PUBLIC_URL%/white-bg.svg' : '%PUBLIC_URL%/dark-bg.svg';
+        }
+        
+        updateFavicon();
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
+        
+        // Listen for theme changes from React
+        window.addEventListener('storage', function(e) {
+          if (e.key === 'file-translator-theme') updateFavicon();
+        });
+        
+        // Also observe body attribute changes
+        const observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'data-theme') {
+              const theme = document.body.getAttribute('data-theme');
+              const favicon = document.getElementById('favicon');
+              favicon.href = theme === 'dark' ? '%PUBLIC_URL%/white-bg.svg' : '%PUBLIC_URL%/dark-bg.svg';
+            }
+          });
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+          observer.observe(document.body, { attributes: true });
+        });
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
