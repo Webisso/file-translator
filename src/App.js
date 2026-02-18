@@ -258,7 +258,8 @@ function AppInner() {
           }
 
           const data = await response.json();
-          translatedResults.push(data.translatedText || line);
+          const translatedText = (data.translatedText || line).replace(/\n+$/, '').replace(/^\n+/, '');
+          translatedResults.push(translatedText);
           setTranslatedLines([...translatedResults]);
         }
 
@@ -293,7 +294,7 @@ function AppInner() {
 
         const data = await response.json();
         const translatedContent = data.translatedContent || '';
-        const translatedLinesResult = translatedContent.split(/\r?\n/);
+        const translatedLinesResult = translatedContent.split(/\r?\n/).map(line => line.replace(/\r$/, ''));
         setTranslatedLines(translatedLinesResult);
         setIsTranslationComplete(true);
         setViewMode(VIEW_MODES.TRANSLATED);
