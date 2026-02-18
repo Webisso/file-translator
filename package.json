@@ -1,12 +1,36 @@
 {
   "name": "file-translator",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.1",
+  "description": "Open-source file translation UI powered by AI with n8n integration",
+  "homepage": "https://webisso.github.io/file-translator",
+  "author": {
+    "name": "Webisso",
+    "url": "https://webisso.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webisso/file-translator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/webisso/file-translator/issues"
+  },
+  "keywords": [
+    "translation",
+    "file-translator",
+    "ai",
+    "n8n",
+    "react",
+    "localization",
+    "i18n"
+  ],
+  "private": false,
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
+    "gh-pages": "^6.3.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.13.0",
@@ -16,6 +40,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
