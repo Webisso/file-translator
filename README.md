@@ -1,70 +1,271 @@
-# Getting Started with Create React App
+# File Translator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<p align="center">
+  <strong>Open-source file translation UI powered by AI</strong>
+</p>
 
-## Available Scripts
+<p align="center">
+  <a href="https://webisso.github.io/file-translator/">Live Demo</a> •
+  <a href="#features">Features</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#n8n-integration">n8n Integration</a> •
+  <a href="#license">License</a>
+</p>
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Overview
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+File Translator is a modern, open-source web application that allows you to translate text files line-by-line or as a whole using AI-powered translation. It features a beautiful, responsive UI with dark/light theme support and integrates seamlessly with n8n workflows.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+**🌐 Live Demo:** [https://webisso.github.io/file-translator/](https://webisso.github.io/file-translator/)
 
-### `npm test`
+## Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 📁 **File Upload** - Drag & drop or click to upload any text file
+- 🌍 **Multi-language Support** - Translate between 30+ languages
+- 🔄 **Two Translation Modes**
+  - **Per-line**: Translates each line individually with real-time progress
+  - **Whole-file**: Sends entire content at once for faster processing
+- ⚡ **Real-time Translation** - Watch translations appear line by line
+- 📊 **Diff View** - Git-style diff visualization (red/green) to compare original and translated content
+- 🎨 **Dark/Light Theme** - System-aware theme with manual toggle
+- 📋 **Copy & Download** - Export translated content easily
+- 🛑 **Stop Translation** - Cancel ongoing translations anytime
+- 🔌 **n8n Integration** - Connect to your own n8n workflow for AI translation
 
-### `npm run build`
+## Screenshots
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Dark Theme | Light Theme |
+|------------|-------------|
+| Upload and translate files with a modern dark interface | Full light theme support for any environment |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Prerequisites
 
-### `npm run eject`
+- Node.js 18+ 
+- npm or yarn
+- n8n instance (for translation backend)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Quick Start
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+# Clone the repository
+git clone https://github.com/webisso/file-translator.git
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# Navigate to project directory
+cd file-translator
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+# Install dependencies
+npm install
 
-## Learn More
+# Start development server
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The app will be available at [http://localhost:3000](http://localhost:3000)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Production Build
 
-### Code Splitting
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This creates an optimized production build in the `build` folder.
 
-### Analyzing the Bundle Size
+## Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. **Configure n8n URL**: Click "Settings" and enter your n8n webhook URL
+2. **Upload a File**: Drag & drop or click to select a text file
+3. **Select Languages**: Choose base language (source) and target language
+4. **Choose Mode**: Select "Per-line" for real-time progress or "Whole-file" for batch translation
+5. **Translate**: Click "Translate file" and watch the magic happen
+6. **Review**: Switch between Original, Translated, and Diff views
+7. **Export**: Copy to clipboard or download the translated file
 
-### Making a Progressive Web App
+## n8n Integration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+File Translator requires an n8n workflow to handle the actual translation. Here's how to set it up:
 
-### Advanced Configuration
+### Flow Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```
+Webhook → AI Agent → Code → Respond to Webhook
+```
 
-### Deployment
+### Step 1: Webhook Node
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Create a Webhook node with the following settings:
 
-### `npm run build` fails to minify
+| Setting | Value |
+|---------|-------|
+| HTTP Method | POST |
+| Authentication | None |
+| Respond | Using 'Respond to Webhook' Node |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Step 2: AI Agent Node
+
+Connect an AI Agent node (GPT-4, Claude, etc.) with:
+
+**Prompt:**
+```
+The current language of the sentence to be translated: {{ $json.body['baseLanguage'] }}
+The sentence to be translated: {{ $json.body.lineText }}
+The target language: {{ $json.body['targetLanguage'] }}
+```
+
+**System Message:**
+```
+You are a translator. You will translate the given sentence into the specified language. In your response, write only the translation. Do not write anything else. Do not write any HTML tags, only the translation. Never use tags such as \n.
+```
+
+### Step 3: Code Node
+
+Add a Code node to format the response:
+
+```javascript
+const translatedText = $input.first().json.output;
+
+return [
+  {
+    json: {
+      translatedText: translatedText,
+      meta: {
+        model: "gpt-4.1",
+        latencyMs: 420
+      }
+    }
+  }
+];
+```
+
+> **Note:** The `meta` field is optional and can contain any metadata you want to track.
+
+### Step 4: Respond to Webhook Node
+
+Add a "Respond to Webhook" node with:
+
+| Setting | Value |
+|---------|-------|
+| Respond With | First Incoming Item |
+
+### API Reference
+
+#### Per-line Request
+
+```json
+POST /webhook/file-translator
+Content-Type: application/json
+
+{
+  "mode": "per-line",
+  "fileName": "example.txt",
+  "lineIndex": 0,
+  "lineText": "Hello world",
+  "baseLanguage": "en-US",
+  "targetLanguage": "tr",
+  "metadata": {
+    "totalLines": 120,
+    "path": "src/messages/en.json"
+  }
+}
+```
+
+#### Per-line Response
+
+```json
+{
+  "translatedText": "Merhaba dünya",
+  "meta": {
+    "model": "gpt-4.1",
+    "latencyMs": 420
+  }
+}
+```
+
+#### Whole-file Request
+
+```json
+POST /webhook/file-translator
+Content-Type: application/json
+
+{
+  "mode": "whole-file",
+  "fileName": "example.txt",
+  "content": "Full file content as a single string",
+  "baseLanguage": "en-US",
+  "targetLanguage": "tr"
+}
+```
+
+#### Whole-file Response
+
+```json
+{
+  "translatedContent": "Tamamı çevrilmiş dosya içeriği",
+  "meta": {
+    "model": "gpt-4.1",
+    "segments": 12
+  }
+}
+```
+
+## Tech Stack
+
+- **React 19** - UI framework
+- **React Router DOM 7** - Client-side routing
+- **CSS Custom Properties** - Theming system
+- **Fetch API** - HTTP requests with AbortController support
+
+## Project Structure
+
+```
+file-translator/
+├── public/
+│   ├── index.html
+│   ├── manifest.json
+│   └── robots.txt
+├── src/
+│   ├── App.js          # Main application component
+│   ├── App.css         # All styles
+│   ├── index.js        # Entry point
+│   └── ...
+├── package.json
+├── LICENSE
+└── README.md
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Built with [Create React App](https://create-react-app.dev/)
+- Powered by [n8n](https://n8n.io/) for workflow automation
+- Inspired by modern translation tools
+
+---
+
+<p align="center">
+  <a href="https://github.com/webisso/file-translator">GitHub</a> •
+  <a href="https://github.com/webisso/file-translator/blob/main/LICENSE">License</a> •
+  <a href="https://webisso.com">Webisso Website</a> •
+  <a href="https://webisso.com/contact-us">Contact Us</a>
+</p>
+
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/webisso">Webisso</a>
+</p>
+

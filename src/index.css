@@ -1,13 +1,105 @@
+:root {
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+    'Segoe UI', sans-serif;
+  --font-monospace: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+
+  --bg-body: #020617;
+  --layer-elevated: rgba(15, 23, 42, 0.97);
+  --layer-elevated-soft: rgba(15, 23, 42, 0.92);
+  --text-normal: #e5e7eb;
+  --text-subtle: #9ca3af;
+  --text-muted: #6b7280;
+
+  --badge-bg: rgba(15, 23, 42, 0.9);
+  --badge-bg-soft: rgba(15, 23, 42, 0.85);
+  --badge-border: rgba(148, 163, 184, 0.55);
+  --badge-text: #e5e7eb;
+
+  --chip-bg: rgba(15, 23, 42, 0.85);
+  --chip-border: rgba(148, 163, 184, 0.55);
+  --chip-text: #e5e7eb;
+
+  --border-subtle: rgba(148, 163, 184, 0.35);
+  --border-strong: rgba(15, 23, 42, 0.95);
+
+  --accent-soft: #38bdf8;
+  --accent-strong: #6366f1;
+  --accent-bg-strong: rgba(79, 70, 229, 0.35);
+  --accent-pill-bg: radial-gradient(circle at 10% 0%, #0ea5e9, #6366f1);
+
+  --input-bg: rgba(15, 23, 42, 0.9);
+  --thumb-bg: #f9fafb;
+
+  --editor-bg: radial-gradient(circle at top left, #020617, #020617);
+  --editor-bg-highlight: rgba(148, 163, 184, 0.18);
+  --editor-text: #e5e7eb;
+  --gutter-bg: rgba(15, 23, 42, 0.97);
+  --gutter-text: #4b5563;
+
+  --chip-bg-light: #eef2ff;
+}
+
+body[data-theme='light'] {
+  --bg-body: #f9fafb;
+  --layer-elevated: #ffffff;
+  --layer-elevated-soft: #f3f4f6;
+  --text-normal: #111827;
+  --text-subtle: #4b5563;
+  --text-muted: #6b7280;
+
+  --badge-bg: #eff6ff;
+  --badge-bg-soft: #e5e7eb;
+  --badge-border: rgba(148, 163, 184, 0.7);
+  --badge-text: #1e293b;
+
+  --chip-bg: #eef2ff;
+  --chip-border: rgba(129, 140, 248, 0.9);
+  --chip-text: #4338ca;
+
+  --border-subtle: rgba(148, 163, 184, 0.6);
+  --border-strong: rgba(148, 163, 184, 0.85);
+
+  --accent-soft: #2563eb;
+  --accent-strong: #4f46e5;
+  --accent-bg-strong: rgba(79, 70, 229, 0.06);
+  --accent-pill-bg: radial-gradient(circle at 10% 0%, #7dd3fc, #6366f1);
+
+  --input-bg: #f9fafb;
+  --thumb-bg: #ffffff;
+
+  --editor-bg: #f9fafb;
+  --editor-bg-highlight: rgba(191, 219, 254, 0.5);
+  --editor-text: #111827;
+  --gutter-bg: #e5e7eb;
+  --gutter-text: #6b7280;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-body);
+  color: var(--text-normal);
+}
+
+body[data-theme='dark'] {
+  background: radial-gradient(circle at top left, #020617, #020617) fixed;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: var(--font-monospace);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
 }
